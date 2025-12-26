@@ -252,7 +252,7 @@
             </div>
             <div style="margin-bottom: 20px;">
                 <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Customer ID:</strong>
-                <span style="font-family: 'Courier New', monospace; background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">43119277-dd38-4cab-bf82-a3900c3d8fc0</span>
+                <span id="customer-id-display" style="font-family: 'Courier New', monospace; background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">Loading...</span>
             </div>
 
             <div class="tabs">
@@ -309,7 +309,29 @@
 
     <script>
         let dropinInstance;
-        const CUSTOMER_ID = '43119277-dd38-4cab-bf82-a3900c3d8fc0';
+        let CUSTOMER_ID = null;
+
+        // Fetch customer ID from config
+        async function loadConfig() {
+            try {
+                const response = await fetch('http://localhost:3010/api/config');
+                const data = await response.json();
+
+                if (data.customerId) {
+                    CUSTOMER_ID = data.customerId;
+                    document.getElementById('customer-id-display').textContent = CUSTOMER_ID;
+                    return CUSTOMER_ID;
+                } else {
+                    throw new Error('No customer ID in configuration');
+                }
+            } catch (error) {
+                console.error('Error loading config:', error);
+                document.getElementById('customer-id-display').textContent = 'Error loading';
+                document.getElementById('customer-info-loading').innerHTML =
+                    '<span style="color: #721c24;">⚠️ Could not load configuration. Check .env file.</span>';
+                throw error;
+            }
+        }
 
         // Switch between tabs
         function switchTab(tabName) {
@@ -543,8 +565,17 @@
         });
 
         // Initialize on page load
-        loadCustomerInfo();
-        initializeBraintree();
+        async function init() {
+            try {
+                await loadConfig();
+                loadCustomerInfo();
+                initializeBraintree();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+            }
+        }
+
+        init();
     </script>
 </body>
 </html>

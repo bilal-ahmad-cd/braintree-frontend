@@ -21,6 +21,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Endpoint to get configuration
+app.get('/api/config', (req, res) => {
+    res.json({
+        customerId: process.env.CUSTOMER_ID
+    });
+});
+
 // Endpoint to test Braintree connection
 app.get('/api/test-connection', async (req, res) => {
     try {
