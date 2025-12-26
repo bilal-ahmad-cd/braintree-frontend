@@ -14,21 +14,19 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
         }
 
         .container {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 1200px;
             width: 100%;
+            margin: 0 auto;
             padding: 40px;
+            min-height: 100vh;
         }
 
         h1 {
@@ -49,33 +47,35 @@
         }
 
         .button {
-            background: #667eea;
+            background: #007bff;
             color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
+            border: 1px solid #007bff;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
         }
 
         .button:hover:not(:disabled) {
-            background: #5568d3;
+            background: #0056b3;
+            border-color: #0056b3;
         }
 
         .button:disabled {
-            background: #ccc;
+            background: #e0e0e0;
+            border-color: #e0e0e0;
+            color: #999;
             cursor: not-allowed;
         }
 
         .nonce-output {
             margin-top: 20px;
-            padding: 20px;
-            background: #f7f9fc;
-            border-radius: 6px;
-            border: 1px solid #e1e8ed;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #ddd;
             display: none;
         }
 
@@ -105,21 +105,22 @@
         .copy-button {
             background: #28a745;
             color: white;
-            border: none;
+            border: 1px solid #28a745;
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 2px;
             font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
-            transition: background 0.2s;
         }
 
         .copy-button:hover {
             background: #218838;
+            border-color: #218838;
         }
 
         .copy-button.copied {
             background: #20c997;
+            border-color: #20c997;
         }
 
         .loading {
@@ -141,21 +142,21 @@
         .test-cards {
             margin-top: 20px;
             padding: 15px;
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 6px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 2px;
             font-size: 13px;
         }
 
         .test-cards h3 {
             font-size: 14px;
             margin-bottom: 8px;
-            color: #856404;
+            color: #555;
         }
 
         .test-cards ul {
             margin-left: 20px;
-            color: #856404;
+            color: #666;
         }
 
         .test-cards li {
@@ -164,30 +165,32 @@
 
         .tabs {
             display: flex;
-            gap: 5px;
-            border-bottom: 2px solid #bee5eb;
+            gap: 0;
+            border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
         }
 
         .tab {
-            padding: 10px 20px;
-            background: transparent;
-            border: none;
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            color: #0c5460;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            font-weight: 500;
+            color: #333;
+            margin-right: 4px;
         }
 
         .tab:hover {
-            background: rgba(190, 229, 235, 0.3);
+            background: #e9ecef;
         }
 
         .tab.active {
-            color: #004085;
-            border-bottom-color: #667eea;
+            background: white;
+            color: #007bff;
+            border-bottom: 2px solid white;
+            margin-bottom: -1px;
         }
 
         .tab-content {
@@ -199,34 +202,49 @@
         }
 
         .info-card {
-            padding: 12px;
-            background: #fff;
-            border-radius: 6px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 2px;
             margin-bottom: 10px;
-            border-left: 3px solid #667eea;
+            border: 1px solid #ddd;
+            border-left: 3px solid #007bff;
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 2px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
+            border: 1px solid;
         }
 
         .badge-success {
-            background: #d4edda;
-            color: #155724;
+            background: #e7f5e9;
+            color: #2d7a3e;
+            border-color: #2d7a3e;
         }
 
         .badge-warning {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff8e6;
+            color: #997404;
+            border-color: #997404;
         }
 
         .badge-info {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #e7f3ff;
+            color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .button.refund-button {
+            background: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .button.refund-button:hover:not(:disabled) {
+            background: #c82333;
+            border-color: #bd2130;
         }
     </style>
 </head>
@@ -235,24 +253,24 @@
         <h1>💳 Braintree Nonce Generator</h1>
         <p class="subtitle">Generate vaulted payment nonces for subscriptions</p>
 
-        <div id="customer-info-loading" style="margin: 20px 0; padding: 15px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; text-align: center; color: #0c5460;">
+        <div id="customer-info-loading" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 2px; text-align: center; color: #666;">
             Loading customer information...
         </div>
 
-        <div id="customer-info" style="margin: 20px 0; padding: 20px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; display: none;">
+        <div id="customer-info" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 2px; display: none;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                 <div>
-                    <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Customer Name:</strong>
-                    <span id="customer-name" style="font-size: 16px; color: #004085;">-</span>
+                    <strong style="color: #555; display: block; margin-bottom: 5px;">Customer Name:</strong>
+                    <span id="customer-name" style="font-size: 15px; color: #333;">-</span>
                 </div>
                 <div>
-                    <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Email:</strong>
-                    <span id="customer-email" style="font-size: 16px; color: #004085;">-</span>
+                    <strong style="color: #555; display: block; margin-bottom: 5px;">Email:</strong>
+                    <span id="customer-email" style="font-size: 15px; color: #333;">-</span>
                 </div>
             </div>
             <div style="margin-bottom: 20px;">
-                <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Customer ID:</strong>
-                <span id="customer-id-display" style="font-family: 'Courier New', monospace; background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">Loading...</span>
+                <strong style="color: #555; display: block; margin-bottom: 5px;">Customer ID:</strong>
+                <span id="customer-id-display" style="font-family: 'Courier New', monospace; background: #fff; padding: 6px 10px; border: 1px solid #ddd; border-radius: 2px; font-size: 13px;">Loading...</span>
             </div>
 
             <div class="tabs">
@@ -272,12 +290,6 @@
             <div id="payment-methods-tab" class="tab-content">
                 <div id="payment-methods">Loading...</div>
             </div>
-        </div>
-
-        <div style="margin: 20px 0; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px;">
-            <strong>Quick Links:</strong>
-            <a href="/" style="color: #667eea; margin: 0 10px;">Home</a>
-            <a href="/customers.html" style="color: #667eea;">View All Customers</a>
         </div>
 
         <div id="loading" class="loading">Loading Braintree...</div>
@@ -359,26 +371,92 @@
                 const data = await response.json();
 
                 if (data.success && data.transactions && data.transactions.length > 0) {
-                    transactionsEl.innerHTML = data.transactions.map(txn => `
-                        <div class="info-card">
+                    transactionsEl.innerHTML = data.transactions.map(txn => {
+                        const canRefund = txn.status === 'settled' || txn.status === 'submitted_for_settlement';
+                        const isCredit = txn.type === 'credit';
+                        const isSale = txn.type === 'sale';
+
+                        // Type indicator styling
+                        const typeIcon = isCredit ? '↑' : '↓';
+                        const typeColor = isCredit ? '#28a745' : '#dc3545';
+                        const typeLabel = isCredit ? 'CREDIT' : 'SALE';
+                        const amountPrefix = isCredit ? '+' : '-';
+
+                        return `
+                        <div class="info-card" id="txn-${txn.id}">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <strong style="color: #004085; font-size: 14px;">$${txn.amount}</strong>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 50px; height: 50px; background: ${typeColor}15; border: 2px solid ${typeColor}; border-radius: 4px;">
+                                        <div style="font-size: 20px; line-height: 1; color: ${typeColor};">${typeIcon}</div>
+                                        <div style="font-size: 9px; font-weight: 600; color: ${typeColor}; margin-top: 2px;">${typeLabel}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 18px; font-weight: 600; color: ${typeColor};">${amountPrefix}$${txn.amount}</div>
+                                        <div style="font-size: 11px; color: #999; margin-top: 2px;">${new Date(txn.createdAt).toLocaleDateString()}</div>
+                                    </div>
+                                </div>
                                 <span class="badge ${txn.status === 'settled' ? 'badge-success' : txn.status === 'submitted_for_settlement' ? 'badge-info' : 'badge-warning'}">${txn.status}</span>
                             </div>
-                            <div style="font-size: 13px; color: #666;">
+                            <div style="font-size: 13px; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e9ecef;">
                                 <div><strong>ID:</strong> <span style="font-family: 'Courier New', monospace; font-size: 12px;">${txn.id}</span></div>
-                                <div><strong>Type:</strong> ${txn.type}</div>
                                 ${txn.cardType ? `<div><strong>Card:</strong> ${txn.cardType} ****${txn.last4}</div>` : ''}
                                 <div><strong>Date:</strong> ${new Date(txn.createdAt).toLocaleString()}</div>
                             </div>
+                            ${canRefund ? `
+                                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                                    <button onclick="refundTransaction('${txn.id}', '${txn.amount}')" class="button refund-button" style="width: auto; padding: 6px 16px; font-size: 13px;">
+                                        Refund Transaction
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 } else {
                     transactionsEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No transactions found for this customer</div>';
                 }
             } catch (error) {
                 console.error('Error loading transactions:', error);
                 transactionsEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #721c24;">Failed to load transactions</div>';
+            }
+        }
+
+        // Refund transaction
+        async function refundTransaction(transactionId, amount) {
+            if (!confirm(`Are you sure you want to refund this transaction for $${amount}?`)) {
+                return;
+            }
+
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Processing...';
+
+            try {
+                const response = await fetch(`http://localhost:3010/api/refund/${transactionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Refund successful! Transaction ${data.transaction.id} status: ${data.transaction.status}`);
+                    // Reload transactions to show updated status
+                    document.getElementById('transactions-info').innerHTML = 'Loading...';
+                    loadTransactions();
+                } else {
+                    alert(`Refund failed: ${data.error}`);
+                    button.disabled = false;
+                    button.textContent = 'Refund Transaction';
+                }
+            } catch (error) {
+                console.error('Error processing refund:', error);
+                alert('Failed to process refund. Please try again.');
+                button.disabled = false;
+                button.textContent = 'Refund Transaction';
             }
         }
 
@@ -436,10 +514,65 @@
                             const allSubs = subData.subscriptions;
 
                             if (activeSubs.length > 0) {
-                                subscriptionEl.innerHTML = activeSubs.map(sub => `
-                                    <div class="info-card">
+                                subscriptionEl.innerHTML = activeSubs.map(sub => {
+                                    // Calculate total price with addons and discounts
+                                    let basePrice = parseFloat(sub.price) || 0;
+                                    let addOnsTotal = 0;
+                                    let discountsTotal = 0;
+
+                                    if (sub.addOns && sub.addOns.length > 0) {
+                                        addOnsTotal = sub.addOns.reduce((total, addon) => {
+                                            const amount = parseFloat(addon.amount) || 0;
+                                            const quantity = parseInt(addon.quantity) || 1;
+                                            return total + (amount * quantity);
+                                        }, 0);
+                                    }
+
+                                    if (sub.discounts && sub.discounts.length > 0) {
+                                        discountsTotal = sub.discounts.reduce((total, discount) => {
+                                            return total + (parseFloat(discount.amount) || 0);
+                                        }, 0);
+                                    }
+
+                                    const totalPrice = basePrice + addOnsTotal - discountsTotal;
+
+                                    const addOnsHtml = sub.addOns && sub.addOns.length > 0
+                                        ? `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                                            <strong>Add-ons:</strong>
+                                            ${sub.addOns.map(addon => {
+                                                const addonAmount = parseFloat(addon.amount) || 0;
+                                                const addonQty = parseInt(addon.quantity) || 1;
+                                                const addonTotal = addonAmount * addonQty;
+                                                return `<div style="margin-left: 15px; margin-top: 5px;">
+                                                    • ${addon.name || addon.id}: $${addonAmount.toFixed(2)} ${addonQty > 1 ? `(×${addonQty}) = $${addonTotal.toFixed(2)}` : ''}
+                                                </div>`;
+                                            }).join('')}
+                                        </div>`
+                                        : '';
+
+                                    const discountsHtml = sub.discounts && sub.discounts.length > 0
+                                        ? `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                                            <strong>Discounts:</strong>
+                                            ${sub.discounts.map(discount => `
+                                                <div style="margin-left: 15px; margin-top: 5px;">
+                                                    • ${discount.name || discount.id}: -$${parseFloat(discount.amount).toFixed(2)}
+                                                </div>
+                                            `).join('')}
+                                        </div>`
+                                        : '';
+
+                                    const priceBreakdown = (addOnsTotal > 0 || discountsTotal > 0)
+                                        ? `<div style="margin-top: 8px; font-size: 12px; color: #999;">
+                                            Base: $${basePrice.toFixed(2)}${addOnsTotal > 0 ? ` + Add-ons: $${addOnsTotal.toFixed(2)}` : ''}${discountsTotal > 0 ? ` - Discounts: $${discountsTotal.toFixed(2)}` : ''}
+                                        </div>`
+                                        : '';
+
+                                    return `<div class="info-card">
                                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                            <strong style="color: #004085; font-size: 15px;">$${sub.price || 'N/A'}/month</strong>
+                                            <div>
+                                                <strong style="color: #004085; font-size: 15px;">$${totalPrice.toFixed(2)}/month</strong>
+                                                ${priceBreakdown}
+                                            </div>
                                             <span class="badge badge-success">Active</span>
                                         </div>
                                         <div style="font-size: 13px; color: #666;">
@@ -447,9 +580,11 @@
                                             <div><strong>Subscription ID:</strong> <span style="font-family: 'Courier New', monospace; font-size: 12px;">${sub.id}</span></div>
                                             <div><strong>Next Billing:</strong> ${sub.nextBillingDate ? new Date(sub.nextBillingDate).toLocaleDateString() : 'N/A'}</div>
                                             <div><strong>Created:</strong> ${sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : 'N/A'}</div>
+                                            ${addOnsHtml}
+                                            ${discountsHtml}
                                         </div>
-                                    </div>
-                                `).join('');
+                                    </div>`;
+                                }).join('');
                             } else {
                                 subscriptionEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><p><strong>No Active Subscriptions</strong></p><p style="margin-top: 10px; font-size: 14px;">' +
                                     (allSubs.length > 0 ? `${allSubs.length} inactive subscription(s) found.` : 'Ready to create subscriptions with vaulted nonces.') +
