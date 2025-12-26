@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braintree Nonce Generator</title>
+    <script src="https://js.braintreegateway.com/web/dropin/1.40.2/js/dropin.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        #dropin-container {
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .button:hover:not(:disabled) {
+            background: #5568d3;
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nonce-output {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7f9fc;
+            border-radius: 6px;
+            border: 1px solid #e1e8ed;
+            display: none;
+        }
+
+        .nonce-output.show {
+            display: block;
+        }
+
+        .nonce-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .nonce-value {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            word-break: break-all;
+            font-size: 13px;
+            color: #333;
+            position: relative;
+        }
+
+        .copy-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .copy-button.copied {
+            background: #20c997;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .test-cards {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .test-cards h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #856404;
+        }
+
+        .test-cards ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .test-cards li {
+            margin: 4px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            border-bottom: 2px solid #bee5eb;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0c5460;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: rgba(190, 229, 235, 0.3);
+        }
+
+        .tab.active {
+            color: #004085;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-card {
+            padding: 12px;
+            background: #fff;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💳 Braintree Nonce Generator</h1>
+        <p class="subtitle">Generate vaulted payment nonces for subscriptions</p>
+
+        <div id="customer-info-loading" style="margin: 20px 0; padding: 15px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; text-align: center; color: #0c5460;">
+            Loading customer information...
+        </div>
+
+        <div id="customer-info" style="margin: 20px 0; padding: 20px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 6px; display: none;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Customer Name:</strong>
+                    <span id="customer-name" style="font-size: 16px; color: #004085;">-</span>
+                </div>
+                <div>
+                    <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Email:</strong>
+                    <span id="customer-email" style="font-size: 16px; color: #004085;">-</span>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <strong style="color: #0c5460; display: block; margin-bottom: 5px;">Customer ID:</strong>
+                <span style="font-family: 'Courier New', monospace; background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">43119277-dd38-4cab-bf82-a3900c3d8fc0</span>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('subscriptions')">Active Subscriptions</button>
+                <button class="tab" onclick="switchTab('transactions')">Transactions</button>
+                <button class="tab" onclick="switchTab('payment-methods')">Payment Methods</button>
+            </div>
+
+            <div id="subscriptions-tab" class="tab-content active">
+                <div id="subscription-info">Loading...</div>
+            </div>
+
+            <div id="transactions-tab" class="tab-content">
+                <div id="transactions-info">Loading...</div>
+            </div>
+
+            <div id="payment-methods-tab" class="tab-content">
+                <div id="payment-methods">Loading...</div>
+            </div>
+        </div>
+
+        <div style="margin: 20px 0; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px;">
+            <strong>Quick Links:</strong>
+            <a href="/" style="color: #667eea; margin: 0 10px;">Home</a>
+            <a href="/customers.html" style="color: #667eea;">View All Customers</a>
+        </div>
+
+        <div id="loading" class="loading">Loading Braintree...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="dropin-container"></div>
+
+        <button id="submit-button" class="button" style="display: none;">
+            Generate Nonce
+        </button>
+
+        <div id="nonce-output" class="nonce-output">
+            <div class="nonce-label">Payment Method Nonce:</div>
+            <div class="nonce-value" id="nonce-value"></div>
+            <button id="copy-button" class="copy-button">Copy Nonce</button>
+        </div>
+
+        <div class="test-cards">
+            <h3>🧪 Test Cards (Sandbox)</h3>
+            <ul>
+                <li><strong>Visa:</strong> 4111 1111 1111 1111</li>
+                <li><strong>Mastercard:</strong> 5555 5555 5555 4444</li>
+                <li><strong>Amex:</strong> 3782 822463 10005</li>
+                <li><strong>CVV:</strong> Any 3-4 digits</li>
+                <li><strong>Expiry:</strong> Any future date</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let dropinInstance;
+        const CUSTOMER_ID = '43119277-dd38-4cab-bf82-a3900c3d8fc0';
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Load data for the tab if needed
+            if (tabName === 'transactions') {
+                loadTransactions();
+            }
+        }
+
+        // Load transactions
+        async function loadTransactions() {
+            const transactionsEl = document.getElementById('transactions-info');
+            if (transactionsEl.innerHTML !== 'Loading...') return; // Already loaded
+
+            try {
+                const response = await fetch(`http://localhost:3010/api/customer/${CUSTOMER_ID}/transactions`);
+                const data = await response.json();
+
+                if (data.success && data.transactions && data.transactions.length > 0) {
+                    transactionsEl.innerHTML = data.transactions.map(txn => `
+                        <div class="info-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <strong style="color: #004085; font-size: 14px;">$${txn.amount}</strong>
+                                <span class="badge ${txn.status === 'settled' ? 'badge-success' : txn.status === 'submitted_for_settlement' ? 'badge-info' : 'badge-warning'}">${txn.status}</span>
+                            </div>
+                            <div style="font-size: 13px; color: #666;">
+                                <div><strong>ID:</strong> <span style="font-family: 'Courier New', monospace; font-size: 12px;">${txn.id}</span></div>
+                                <div><strong>Type:</strong> ${txn.type}</div>
+                                ${txn.cardType ? `<div><strong>Card:</strong> ${txn.cardType} ****${txn.last4}</div>` : ''}
+                                <div><strong>Date:</strong> ${new Date(txn.createdAt).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    transactionsEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No transactions found for this customer</div>';
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                transactionsEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #721c24;">Failed to load transactions</div>';
+            }
+        }
+
+        // Load customer information
+        async function loadCustomerInfo() {
+            try {
+                const response = await fetch(`http://localhost:3010/api/customer/${CUSTOMER_ID}`);
+                const data = await response.json();
+
+                if (data.success && data.customer) {
+                    const customer = data.customer;
+
+                    // Display customer name
+                    const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'N/A';
+                    document.getElementById('customer-name').textContent = fullName;
+
+                    // Display email
+                    document.getElementById('customer-email').textContent = customer.email || 'N/A';
+
+                    // Display payment methods
+                    const paymentMethodsEl = document.getElementById('payment-methods');
+                    if (customer.paymentMethods && customer.paymentMethods.length > 0) {
+                        paymentMethodsEl.innerHTML = customer.paymentMethods.map(pm => {
+                            const type = pm.cardType || pm.constructor.name;
+                            const last4 = pm.last4 ? `****${pm.last4}` : '';
+                            const expiry = pm.expirationMonth && pm.expirationYear ?
+                                `Expires: ${pm.expirationMonth}/${pm.expirationYear}` : '';
+                            const token = pm.token || 'N/A';
+                            return `<div class="info-card">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="color: #004085; font-size: 15px;">${type} ${last4}</strong>
+                                    <span class="badge badge-success" style="margin-left: 10px;">Active</span>
+                                </div>
+                                <div style="font-size: 13px; color: #666;">
+                                    <div><strong>Token:</strong> <span style="font-family: 'Courier New', monospace; font-size: 12px;">${token}</span></div>
+                                    <div><strong>${expiry}</strong></div>
+                                    ${pm.cardholderName ? `<div><strong>Cardholder:</strong> ${pm.cardholderName}</div>` : ''}
+                                </div>
+                            </div>`;
+                        }).join('');
+                    } else {
+                        paymentMethodsEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No payment methods on file</div>';
+                    }
+
+                    // Fetch and show subscription info
+                    const subscriptionEl = document.getElementById('subscription-info');
+                    subscriptionEl.innerHTML = 'Loading subscription info...';
+
+                    try {
+                        const subResponse = await fetch(`http://localhost:3010/api/customer/${CUSTOMER_ID}/subscriptions`);
+                        const subData = await subResponse.json();
+
+                        if (subData.success && subData.subscriptions && subData.subscriptions.length > 0) {
+                            const activeSubs = subData.subscriptions.filter(s => s.status === 'Active');
+                            const allSubs = subData.subscriptions;
+
+                            if (activeSubs.length > 0) {
+                                subscriptionEl.innerHTML = activeSubs.map(sub => `
+                                    <div class="info-card">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                            <strong style="color: #004085; font-size: 15px;">$${sub.price || 'N/A'}/month</strong>
+                                            <span class="badge badge-success">Active</span>
+                                        </div>
+                                        <div style="font-size: 13px; color: #666;">
+                                            <div><strong>Plan ID:</strong> ${sub.planId || 'N/A'}</div>
+                                            <div><strong>Subscription ID:</strong> <span style="font-family: 'Courier New', monospace; font-size: 12px;">${sub.id}</span></div>
+                                            <div><strong>Next Billing:</strong> ${sub.nextBillingDate ? new Date(sub.nextBillingDate).toLocaleDateString() : 'N/A'}</div>
+                                            <div><strong>Created:</strong> ${sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : 'N/A'}</div>
+                                        </div>
+                                    </div>
+                                `).join('');
+                            } else {
+                                subscriptionEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><p><strong>No Active Subscriptions</strong></p><p style="margin-top: 10px; font-size: 14px;">' +
+                                    (allSubs.length > 0 ? `${allSubs.length} inactive subscription(s) found.` : 'Ready to create subscriptions with vaulted nonces.') +
+                                    '</p></div>';
+                            }
+                        } else {
+                            if (customer.paymentMethods && customer.paymentMethods.length > 0) {
+                                subscriptionEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><p><strong>No Subscriptions</strong></p><p style="margin-top: 10px; font-size: 14px;">Ready to create subscriptions with vaulted nonces.</p></div>';
+                            } else {
+                                subscriptionEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #856404;"><p><strong>No Subscriptions</strong></p><p style="margin-top: 10px; font-size: 14px;">Add a payment method to enable subscriptions.</p></div>';
+                            }
+                        }
+                    } catch (subError) {
+                        console.error('Error fetching subscriptions:', subError);
+                        subscriptionEl.innerHTML = 'Could not load subscription info. Nonces will still be vaulted.';
+                    }
+
+                    // Show customer info and hide loading
+                    document.getElementById('customer-info-loading').style.display = 'none';
+                    document.getElementById('customer-info').style.display = 'block';
+                } else {
+                    throw new Error('Customer not found');
+                }
+            } catch (error) {
+                console.error('Error loading customer info:', error);
+                document.getElementById('customer-info-loading').innerHTML =
+                    '<span style="color: #721c24;">⚠️ Could not load customer information</span>';
+            }
+        }
+
+        // Fetch client token and initialize Braintree
+        async function initializeBraintree() {
+            try {
+                const response = await fetch(`http://localhost:3010/api/client-token?customerId=${CUSTOMER_ID}`);
+                const data = await response.json();
+
+                if (!data.clientToken) {
+                    throw new Error('No client token received');
+                }
+
+                // Create Braintree Drop-in
+                const instance = await braintree.dropin.create({
+                    authorization: data.clientToken,
+                    container: '#dropin-container',
+                    card: {
+                        cardholderName: {
+                            required: false
+                        }
+                    }
+                });
+
+                dropinInstance = instance;
+
+                // Hide loading, show button
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('submit-button').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error initializing Braintree:', error);
+                document.getElementById('loading').style.display = 'none';
+                const errorEl = document.getElementById('error');
+                errorEl.textContent = 'Failed to initialize Braintree. Check console and .env configuration.';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        // Generate nonce
+        document.getElementById('submit-button').addEventListener('click', async () => {
+            const button = document.getElementById('submit-button');
+            const nonceOutput = document.getElementById('nonce-output');
+            const nonceValue = document.getElementById('nonce-value');
+
+            button.disabled = true;
+            button.textContent = 'Generating...';
+
+            try {
+                const payload = await dropinInstance.requestPaymentMethod();
+
+                // Display the nonce
+                nonceValue.textContent = payload.nonce;
+                nonceOutput.classList.add('show');
+
+                button.textContent = 'Generate Another Nonce';
+                button.disabled = false;
+
+                console.log('Payment Nonce (Vaulted):', payload.nonce);
+                console.log('Customer ID:', CUSTOMER_ID);
+                console.log('Full Payload:', payload);
+                console.log('✅ This nonce can be used for subscriptions');
+
+            } catch (error) {
+                console.error('Error generating nonce:', error);
+                alert('Please enter valid payment details');
+                button.textContent = 'Generate Nonce';
+                button.disabled = false;
+            }
+        });
+
+        // Copy nonce to clipboard
+        document.getElementById('copy-button').addEventListener('click', () => {
+            const nonceValue = document.getElementById('nonce-value').textContent;
+            const button = document.getElementById('copy-button');
+
+            navigator.clipboard.writeText(nonceValue).then(() => {
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = 'Copy Nonce';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        // Initialize on page load
+        loadCustomerInfo();
+        initializeBraintree();
+    </script>
+</body>
+</html>
